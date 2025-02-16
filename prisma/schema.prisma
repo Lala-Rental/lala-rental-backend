@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/**
+ * User model
+ * This model represents a user in the system.
+ * @param id - The unique identifier of the user.
+ * @param name - The name of the user.
+ * @param avatar - The avatar of the user.
+ * @param email - The email of the user.
+ * @param role - The role of the user.
+ * @param verified - The verification status of the user.
+ * @param bookings - The bookings made by the user.
+ * @param properties - The properties owned by the user.
+ */
+model User {
+  id         String     @id @default(uuid())
+  name       String
+  avatar     String
+  email      String     @unique
+  role       Role
+  verified   Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  bookings   Booking[]
+  properties Property[]
+}
+
+/**
+ * Property model
+ * This model represents a property in the system.
+ * @param id - The unique identifier of the property.
+ * @param title - The title of the property.
+ * @param description - The description of the property.
+ * @param price - The price of the property.
+ * @param location - The location of the property.
+ * @param hostId - The unique identifier of the host.
+ * @param host - The host of the property.
+ * @param bookings - The bookings made for the property.
+ */
+model Property {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  price       Float
+  location    String
+  hostId      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  host        User      @relation(fields: [hostId], references: [id])
+  bookings    Booking[]
+}
+
+/**
+ * Booking model
+ * This model represents a booking in the system.
+ * @param id - The unique identifier of the booking.
+ * @param renterId - The unique identifier of the renter.
+ * @param propertyId - The unique identifier of the property.
+ * @param checkIn - The check-in date of the booking.
+ * @param checkOut - The check-out date of the booking.
+ * @param status - The status of the booking.
+ * @param renter - The renter of the booking.
+ * @param property - The property of the booking.
+ */
+model Booking {
+  id         String        @id @default(uuid())
+  renterId   String
+  propertyId String
+  checkIn    DateTime
+  checkOut   DateTime
+  status     BookingStatus
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  renter     User          @relation(fields: [renterId], references: [id])
+  property   Property      @relation(fields: [propertyId], references: [id])
+}
+
+/**
+ * User role enum type
+ */
+enum Role {
+  RENTER
+  HOST
+}
+
+/**
+ * Booking status enum type
+ */
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELED
+}
