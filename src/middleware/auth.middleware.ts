@@ -6,7 +6,7 @@ import { IUser } from "../types/user.types";
 
 dotenv.config();
 
-const secret = process.env.JWT_SECRET ?? "" as string;
+const secret = process.env.JWT_SECRET ?? ("" as string);
 
 /**
  * Middleware to check if the user is authenticated
@@ -21,25 +21,28 @@ export const authMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-    const token = req.headers.authorization?.split(" ")[1];
+  const token = req.headers.authorization?.split(" ")[1];
 
-    if (!token) {
-        return res.status(401).json({
-            status: "error",
-            message: "Access denied. No token provided.",
-        });
-    }
-
-    tryCatch(async () => {
-        const decoded = jwt.verify(token, secret);
-        
-        req.user = decoded as IUser;
-
-        next();
-    }, () => {
-        return res.status(400).json({
-            status: "error",
-            message: "Invalid token.",
-        });
+  if (!token) {
+    res.status(401).json({
+      status: "error",
+      message: "Access denied. No token provided.",
     });
+  }
+
+  tryCatch(
+    async () => {
+      const decoded = jwt.verify(token as string, secret);
+
+      (req as any).user = decoded as IUser;
+
+      next();
+    },
+    () => {
+      res.status(400).json({
+        status: "error",
+        message: "Invalid token.",
+      });
+    }
+  );
 };

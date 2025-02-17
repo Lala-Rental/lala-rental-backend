@@ -9,7 +9,7 @@ const router = express.Router();
  * Default route
  * @route GET /
  */
-router.get("/", (req, res) => {
+router.get("/", (_req, res) => {
     res.send("Welcome to LaLa Rental API");
 });
 

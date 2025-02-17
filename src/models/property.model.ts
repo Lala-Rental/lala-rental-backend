@@ -24,9 +24,14 @@ export const createProperty = async (
  * @param {string} id - Property ID
  */
 export const getPropertyById = async (
-  id: string
+  id: string,
+  hostId?: string
 ): Promise<IProperty | null> => {
-  const property = await prisma.property.findUnique({ where: { id } });
+  const property = await prisma.property.findUnique({
+    where: {
+      id, ...(hostId && { hostId }),
+    },
+  });
   return property;
 };
 
@@ -34,8 +39,8 @@ export const getPropertyById = async (
  * @description Get All properties
  * @returns {Promise<IProperty[]>} - List of properties
  */
-export const getAllProperties = async (): Promise<IProperty[]> => {
-  const properties = await prisma.property.findMany();
+export const getAllProperties = async (hostId?: string): Promise<IProperty[]> => {
+  const properties = await prisma.property.findMany({ where: { hostId }, });
   return properties;
 };
 
@@ -61,7 +66,7 @@ export const updateProperty = async (
  * @param {string} id - Property ID
  * @returns {Promise<IProperty>} - Deleted property
  */
-export const deleteProperty = async (id: string): Promise<IProperty> => {
-  const property = await prisma.property.delete({ where: { id } });
+export const deleteProperty = async (id: string, hostId?: string): Promise<IProperty> => {
+  const property = await prisma.property.delete({ where: {  id, ...(hostId && { hostId }), } });
   return property;
 };
