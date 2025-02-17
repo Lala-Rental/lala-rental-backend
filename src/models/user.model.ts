@@ -8,11 +8,13 @@ const prisma = new PrismaClient();
  * @param {Omit<IUser, "id" | "createdAt" | "updatedAt">} userData - User data
  * @returns {Promise<IUser>} - Created user
  */
-export const createUser = async (userData: Omit<IUser, "id" | "createdAt" | "updatedAt">): Promise<IUser> => {
+export const createUser = async (
+  userData: Omit<IUser, "id" | "createdAt" | "updatedAt">
+): Promise<IUser> => {
   const user = await prisma.user.create({
     data: { ...userData, verified: false },
   });
-  
+
   return user;
 };
 
@@ -21,7 +23,7 @@ export const createUser = async (userData: Omit<IUser, "id" | "createdAt" | "upd
  * @param {string} id - User ID
  */
 export const getUserById = async (id: string): Promise<IUser | null> => {
-  const user = await prisma.user.findUnique({ where: { id }});
+  const user = await prisma.user.findUnique({ where: { id } });
   return user;
 };
 
@@ -40,8 +42,11 @@ export const getAllUsers = async (): Promise<IUser[]> => {
  * @param {Partial<IUser>} userData - User data
  * @returns {Promise<IUser>} - Updated user
  */
-export const updateUser = async (id: string, userData: Partial<IUser>): Promise<IUser> => {
-  const user = await prisma.user.update({ where: { id }, data: userData,});
+export const updateUser = async (
+  id: string,
+  userData: Partial<IUser>
+): Promise<IUser> => {
+  const user = await prisma.user.update({ where: { id }, data: userData });
   return user;
 };
 

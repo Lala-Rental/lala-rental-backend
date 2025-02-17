@@ -3,10 +3,10 @@ type ErrorCallback = (error: Error) => void;
 
 export const tryCatch = async <T>(callback: CallbackFunction<T>, onError?: ErrorCallback): Promise<void> => {
   try {
-    await callback();
+     await callback();
   } catch (error) {
     if (onError) {
-      onError(error as Error);
+      return onError(error as Error);
     }
   }
 };
