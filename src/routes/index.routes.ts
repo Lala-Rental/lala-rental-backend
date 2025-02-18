@@ -3,6 +3,7 @@ import express from "express";
 import authRoutes from "./auth.routes";
 import propertiesRoute from "./properties.routes";
 import bookingsRoutes from "./booking.routes";
+import usersRoutes from "./user.routes";
 
 const router = express.Router();
 
@@ -31,5 +32,11 @@ router.use('/properties', propertiesRoute);
  * @route /bookings
  */
 router.use('/bookings', bookingsRoutes);
+
+/**
+ * User Routes
+ * @route /users
+ */
+router.use('/users', usersRoutes);
 
 export default router;
