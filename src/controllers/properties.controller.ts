@@ -3,11 +3,8 @@ import { tryCatch } from '../utils/trycatch';
 import { createProperty, getAllProperties, getPropertyById, updateProperty as updatePropertyModel, deleteProperty as deletePropertyModel } from '../models/property.model';
 import { propertySchema } from '../validations/property.validation';
 import { uploadImages } from '../services/properties.service';
-import { IUser } from '../types/user.types';
 import { ZodError } from 'zod';
-interface CustomRequest extends Request {
-    user: IUser;
-}
+import { CustomRequest } from '../types/request.types';
 
 /**
  * List all properties

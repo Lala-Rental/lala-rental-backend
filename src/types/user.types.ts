@@ -1,4 +1,4 @@
-export type Role = "RENTER" | "HOST";
+import { Role } from "@prisma/client";
 
 export interface IUser {
   id: string;
