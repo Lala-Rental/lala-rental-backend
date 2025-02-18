@@ -1,6 +1,8 @@
 import express from "express";
 import { authMiddleware } from "../middleware/auth.middleware";
 import * as UsersController from "../controllers/users.controller";
+import { authorizeRoles } from "../middleware/authorize.middleware";
+import { Role } from "@prisma/client";
 
 const router = express.Router();
 
@@ -16,7 +18,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
-router.get('/', authMiddleware, UsersController.listUsers);
+router.get('/', authMiddleware, authorizeRoles([Role.ADMIN]), UsersController.listUsers);
 
 /**
  * @swagger
@@ -39,7 +41,7 @@ router.get('/', authMiddleware, UsersController.listUsers);
  *         schema:
  *           type: string
  */
-router.get('/:id', authMiddleware, UsersController.showUser);
+router.get('/:id', authMiddleware, authorizeRoles([Role.ADMIN]), UsersController.showUser);
 
 /**
  * @swagger
@@ -62,6 +64,6 @@ router.get('/:id', authMiddleware, UsersController.showUser);
  *         schema:
  *           type: string
  */
-router.delete('/:id', authMiddleware, UsersController.deleteUser);
+router.delete('/:id', authMiddleware, authorizeRoles([Role.ADMIN]), UsersController.deleteUser);
 
 export default router;

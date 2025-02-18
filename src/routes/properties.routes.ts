@@ -1,27 +1,11 @@
 import express from "express";
-import multer from 'multer';
+import { Role } from "@prisma/client";
 import * as PropertiesController from "../controllers/properties.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
-import path from "path";
-import fs from "fs";
+import { authorizeRoles } from "../middleware/authorize.middleware";
+import { upload } from "../middleware/upload.middleware";
 
 const router = express.Router();
-
-const storage = multer.diskStorage({
-    destination: function (_req, _file, cb) {
-      const dir = path.join(__dirname, "uploads", "properties");
-  
-      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-  
-      cb(null, dir);
-    },
-    filename: function (_req, file, cb) {
-      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-      cb(null, "lala-rental" + uniqueSuffix + "-" + file.originalname);
-    },
-});
-
-const upload = multer({ storage: storage });
 
 /**
  * @swagger
@@ -70,7 +54,7 @@ router.get('/:id', PropertiesController.showProperty);
  *       500:
  *         description: Server error
  */
-router.post('/', authMiddleware, upload.array("images", 12), PropertiesController.storeProperty);
+router.post('/', authMiddleware, authorizeRoles([Role.HOST]), upload.array("images", 12), PropertiesController.storeProperty);
 
 /**
  * @swagger
@@ -91,7 +75,7 @@ router.post('/', authMiddleware, upload.array("images", 12), PropertiesControlle
  *       500:
  *         description: Server error
  */
-router.put('/:id', authMiddleware, upload.array("images", 12), PropertiesController.updateProperty);
+router.put('/:id', authMiddleware, authorizeRoles([Role.HOST]), upload.array("images", 12), PropertiesController.updateProperty);
 
 /**
  * @swagger
@@ -112,6 +96,6 @@ router.put('/:id', authMiddleware, upload.array("images", 12), PropertiesControl
  *       500:
  *         description: Server error
  */
-router.delete('/:id', authMiddleware, PropertiesController.deleteProperty); 
+router.delete('/:id', authMiddleware, authorizeRoles([Role.HOST]), PropertiesController.deleteProperty); 
 
 export default router;

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { tryCatch } from "../utils/trycatch";
+import { tryCatch } from "../utils/trycatch.util";
 import { IUser } from "../types/user.types";
 
 dotenv.config();

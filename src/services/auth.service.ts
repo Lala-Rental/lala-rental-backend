@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { getUserInfo } from "./googleauth.service";
 import { IUser } from "../types/user.types";
 import jwt, { SignOptions } from "jsonwebtoken";
+import { Role } from "@prisma/client";
 
 dotenv.config();
 
@@ -22,7 +23,7 @@ export const handleGoogleAuthService = async (token: string) => {
   let user = await getUserByEmail(email);
 
   if (!user)
-    user = await createUser({ name, avatar: picture, email, role: "RENTER" });
+    user = await createUser({ name, avatar: picture, email, role: Role.RENTER });
 
   return user;
 }
