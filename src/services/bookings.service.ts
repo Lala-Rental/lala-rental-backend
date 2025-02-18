@@ -10,21 +10,20 @@ const prisma = new PrismaClient();
  * @param {Date} checkIn - Check-in date
  * @param {Date} checkOut - Check-out date
  */
-const anyExistingBookings = async (propertyId: string, checkIn: Date, checkOut: Date) => {
+const anyExistingBookings = async (propertyId: string, checkIn: Date, checkOut: Date, excludeBookingId?: string) => {
     const existingBookings = await prisma.booking.findMany({
         where: {
-            propertyId: propertyId, 
-            OR: [   
-                {
-                    checkIn: { lte: checkOut },
-                    checkOut: { gte: checkIn },
-                },
-            ],
+            propertyId: propertyId,
+            checkIn: { lte: checkOut },
+            checkOut: { gte: checkIn },
+            ...(excludeBookingId && {
+                id: { not: excludeBookingId },
+            }),
         },
     });
 
-    return (existingBookings.length > 0) ? true : false;
-}
+    return existingBookings.length > 0;
+};
 
 /**
  * @description Handle booking
@@ -50,7 +49,7 @@ export const handleBooking = async (validatedData: Omit<IBooking, "id" | "create
  */
 export const handleUpdateBooking = async (validatedData: Omit<IBooking, "createdAt" | "updatedAt">): Promise<IBooking> => {
     const { id, renterId, propertyId, checkIn, checkOut, status } = validatedData;
-    const existingBookings = await anyExistingBookings(propertyId, checkIn, checkOut);
+    const existingBookings = await anyExistingBookings(propertyId, checkIn, checkOut, id);
 
     if (existingBookings)
         throw new Error('Property is already booked for the selected dates');
@@ -63,3 +62,4 @@ export const handleUpdateBooking = async (validatedData: Omit<IBooking, "created
 
     return booking;
 }
+ 

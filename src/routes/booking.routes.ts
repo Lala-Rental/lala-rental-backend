@@ -20,6 +20,43 @@ router.get('/', authMiddleware, BookingsController.listBookings);
 
 /**
  * @swagger
+ * /bookings/user:
+ *   get:
+ *     summary: Get all bookings for a specific user.
+ *     description: Get all bookings for a specific user from the system.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved
+ *       500:
+ *         description: Server error
+ */
+router.get('/user', authMiddleware, BookingsController.listUserBookings);
+
+/**
+ * @swagger
+ * /bookings/property/{propertyId}:
+ *   get:
+ *     summary: Get bookings by property ID.
+ *     description: Get bookings by property ID.
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved
+ *       404:
+ *         description: Bookings not found
+ *       500:
+ *         description: Server error
+ *     parameters:
+ *       - in: path
+ *         name: propertyId
+ *         required: true
+ *         description: ID of the property
+ *         schema:
+ *           type: string
+ */
+router.get('/property/:propertyId', authMiddleware, BookingsController.getBookingsByPropertyId);
+
+/**
+ * @swagger
  * /bookings/{id}:
  *   get:
  *     summary: Get a booking by ID.

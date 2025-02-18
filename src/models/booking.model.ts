@@ -46,6 +46,33 @@ export const getAllBookings = async (renterId?: string): Promise<IBooking[]> => 
 };
 
 /**
+ * @description Get all bookings for a specific user
+ * @param {string} userId - User ID
+ * @returns {Promise<IBooking[]>} - List of bookings
+ */
+export const getAllBookingsByUser = async (userId: string): Promise<IBooking[]> => {
+  const bookings = await prisma.booking.findMany({
+    where: { renterId: userId },
+  });
+
+  return bookings;
+};
+
+/**
+ * @description Get bookings by property ID
+ * @param {string} propertyId - Property ID
+ * @returns {Promise<IBooking[]>} - List of bookings
+ */
+export const allBookingsByPropertyId = async (propertyId: string): Promise<IBooking[]> => {
+    const bookings = await prisma.booking.findMany({
+        where: {
+            propertyId: propertyId,
+        },
+    });
+    return bookings;
+};
+
+/**
  * @description Update booking
  * @param {string} id - Booking ID
  * @param {Partial<IBooking>} bookingData - Booking data
