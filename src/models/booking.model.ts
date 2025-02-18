@@ -10,11 +10,10 @@ const prisma = new PrismaClient();
  */
 export const createBooking = async (
   renterId: string,
-  propertId: string,
-  bookingData: Omit<IBooking, "id" | "createdAt" | "updatedAt">
+  bookingData: Omit<IBooking, "id" | "createdAt" | "updatedAt" | "renterId">,
 ): Promise<IBooking> => {
   const booking = await prisma.booking.create({
-    data: { renterId: renterId, propertyId: propertId, ...bookingData },
+    data: { renterId, ...bookingData },
   });
 
   return booking;

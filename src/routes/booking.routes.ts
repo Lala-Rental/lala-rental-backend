@@ -21,20 +21,20 @@ router.get('/', authMiddleware, BookingsController.listBookings);
 /**
  * @swagger
  * /bookings/{id}:
- *  get:
- *   summary: Get a booking by ID.
- *   description: Get a booking by ID.
- *   responses:
- *      200:
+ *   get:
+ *     summary: Get a booking by ID.
+ *     description: Get a booking by ID.
+ *     responses:
+ *       200:
  *         description: Successfully retrieved
- *      404:
+ *       404:
  *         description: Booking not found
- *      500:
+ *       500:
  *         description: server error
- *   parameters:
- *      - in: path
- *      name: id
- *      required: true
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
  */
 router.get('/:id', authMiddleware, BookingsController.showBooking);
 
