@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   testEnvironment: "node",
   preset: "ts-jest/presets/default-esm",
   transform: {
@@ -15,4 +15,5 @@ export default {
     "!src/**/*.d.ts",
     "!src/**/*.d.mts",
   ],
+  setupFiles: ["<rootDir>/jest.setup.js"],
 };
