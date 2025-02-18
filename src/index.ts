@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import session from "express-session";
 import bodyParser from 'body-parser';
 import routes from "./routes/index.routes";
-import { setupSwagger } from "./utils/swagger";
+import { setupSwagger } from "./utils/swagger.util";
 
 dotenv.config();
 

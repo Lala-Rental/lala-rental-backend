@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { tryCatch } from '../utils/trycatch';
+import { tryCatch } from '../utils/trycatch.util';
 import { getAllUsers, getUserById, deleteUserById } from '../models/user.model';
 
 /**

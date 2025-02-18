@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { tryCatch } from '../utils/trycatch';
+import { tryCatch } from '../utils/trycatch.util';
 import { IUser } from '../types/user.types';
 import { getAllBookings, getBookingById, deleteBooking as deleteBookingModel, getAllBookingsByUser, allBookingsByPropertyId } from '../models/booking.model';
 import { bookingSchema } from '../validations/booking.validation';

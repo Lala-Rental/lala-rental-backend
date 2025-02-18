@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { tryCatch } from '../utils/trycatch';
+import { tryCatch } from '../utils/trycatch.util';
 import { createProperty, getAllProperties, getPropertyById, updateProperty as updatePropertyModel, deleteProperty as deletePropertyModel } from '../models/property.model';
 import { propertySchema } from '../validations/property.validation';
 import { uploadImages } from '../services/properties.service';

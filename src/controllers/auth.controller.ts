@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { tryCatch } from "../utils/trycatch";
+import { tryCatch } from "../utils/trycatch.util";
 import dotenv from 'dotenv';
 import { generateToken, handleGoogleAuthService } from "../services/auth.service";
 
