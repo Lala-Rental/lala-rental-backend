@@ -1,8 +1,27 @@
 import express from "express";
+import multer from 'multer';
 import * as PropertiesController from "../controllers/properties.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
+import path from "path";
+import fs from "fs";
 
 const router = express.Router();
+
+const storage = multer.diskStorage({
+    destination: function (_req, _file, cb) {
+      const dir = path.join(__dirname, "uploads", "properties");
+  
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  
+      cb(null, dir);
+    },
+    filename: function (_req, file, cb) {
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(null, "lala-rental" + uniqueSuffix + "-" + file.originalname);
+    },
+});
+
+const upload = multer({ storage: storage });
 
 /**
  * @swagger
@@ -51,7 +70,7 @@ router.get('/:id', PropertiesController.showProperty);
  *       500:
  *         description: Server error
  */
-router.post('/', authMiddleware, PropertiesController.storeProperty);
+router.post('/', authMiddleware, upload.array("images", 12), PropertiesController.storeProperty);
 
 /**
  * @swagger
@@ -72,7 +91,7 @@ router.post('/', authMiddleware, PropertiesController.storeProperty);
  *       500:
  *         description: Server error
  */
-router.put('/:id', authMiddleware, PropertiesController.updateProperty);
+router.put('/:id', authMiddleware, upload.array("images", 12), PropertiesController.updateProperty);
 
 /**
  * @swagger

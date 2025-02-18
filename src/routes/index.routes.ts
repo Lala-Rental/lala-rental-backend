@@ -2,6 +2,7 @@ import express from "express";
 
 import authRoutes from "./auth.routes";
 import propertiesRoute from "./properties.routes";
+import bookingsRoutes from "./booking.routes";
 
 const router = express.Router();
 
@@ -24,5 +25,11 @@ router.use("/auth", authRoutes);
  * @route /properties 
  */
 router.use('/properties', propertiesRoute);
+
+/**
+ * Bookings routes
+ * @route /bookings
+ */
+router.use('/bookings', bookingsRoutes);
 
 export default router;

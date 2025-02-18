@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { tryCatch } from "../utils/trycatch";
 import dotenv from 'dotenv';
-import { handleGoogleAuthService } from "../services/auth.service";
+import { generateToken, handleGoogleAuthService } from "../services/auth.service";
 
 dotenv.config();
 
@@ -13,14 +13,21 @@ dotenv.config();
  * @returns 
  */
 export const handleGoogleAuth = async (req: Request, res: Response) => {
-  return tryCatch(async () => {
+  tryCatch(async () => {
     const { token } = req.body;
     const user = await handleGoogleAuthService(token);
+    const authToken = await generateToken(user);
 
-    return res.status(200).json({
+    res.status(200).json({
       status: "success",
       message: "User authenticated successfully",
       user,
+      auth_token: authToken
+    });
+  }, (error) => {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
     });
   });
 }

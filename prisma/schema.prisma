@@ -54,7 +54,7 @@ model Property {
   id          String    @id @default(uuid())
   title       String
   description String
-  price       Float
+  price       String
   location    String
   images      String[]
   hostId      String

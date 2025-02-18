@@ -9,10 +9,10 @@ const prisma = new PrismaClient();
  * @returns {Promise<IUser>} - Created user
  */
 export const createUser = async (
-  userData: Omit<IUser, "id" | "createdAt" | "updatedAt">
+  userData: Omit<IUser, "id" | "createdAt" | "updatedAt" | "verified">
 ): Promise<IUser> => {
   const user = await prisma.user.create({
-    data: { ...userData, verified: false },
+    data: { ...userData, verified: true },
   });
 
   return user;
@@ -26,6 +26,16 @@ export const getUserById = async (id: string): Promise<IUser | null> => {
   const user = await prisma.user.findUnique({ where: { id } });
   return user;
 };
+
+/**
+ * @description Get User by Email
+ * @param {string} email - User Email
+ * @returns {Promise<IUser | null>} - User
+ */
+export const getUserByEmail = async (email: string): Promise<IUser | null> => {
+  const user = await prisma.user.findUnique({ where: { email } });
+  return user;
+}
 
 /**
  * @description Get All users

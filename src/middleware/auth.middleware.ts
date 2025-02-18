@@ -30,19 +30,30 @@ export const authMiddleware = (
     });
   }
 
-  tryCatch(
-    async () => {
-      const decoded = jwt.verify(token as string, secret);
+  tryCatch(async () => {
+    jwt.verify(token, secret, (err, decoded) => {
+      if (err) {
+        if (err.name === "TokenExpiredError") {
+          res.status(401).json({
+            status: "error",
+            message: "Token expired.",
+          });
+        } else {
+          res.status(400).json({
+            status: "error",
+            message: "Invalid token.",
+          });
+        }
+      }
 
       (req as any).user = decoded as IUser;
 
       next();
-    },
-    () => {
-      res.status(400).json({
-        status: "error",
-        message: "Invalid token.",
-      });
-    }
-  );
+    });
+  }, (error) => {
+    res.status(500).json({
+      status: "error",
+      message: error.message,
+    });
+  });
 };

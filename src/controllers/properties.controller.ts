@@ -4,7 +4,7 @@ import { createProperty, getAllProperties, getPropertyById, updateProperty as up
 import { propertySchema } from '../validations/property.validation';
 import { uploadImages } from '../services/properties.service';
 import { IUser } from '../types/user.types';
-
+import { ZodError } from 'zod';
 interface CustomRequest extends Request {
     user: IUser;
 }
@@ -18,7 +18,10 @@ interface CustomRequest extends Request {
 export const listProperties = async (_req: Request, res: Response) => {
     return tryCatch(async () => {
         const properties = await getAllProperties();
-        return res.status(200).json(properties);
+        return res.status(200).json({
+            message: "Properties fetched successfully",
+            data: properties
+        });
     });
 }
 
@@ -36,7 +39,7 @@ export const showProperty = async (req: Request, res: Response) => {
         if (!property)
             return res.status(404).json({ success: false, message: 'Property not found' });
 
-        res.status(200).json({ success: true, property });
+        res.status(200).json({ success: true, data: property });
     });
 }
 
@@ -47,14 +50,17 @@ export const showProperty = async (req: Request, res: Response) => {
  * @param res Response
  */
 export const storeProperty = async (req: CustomRequest, res: Response) => {
-    return tryCatch(async () => {
-        const validatedData = propertySchema.parse(req.body);
-        const images = await uploadImages(validatedData.images as unknown as Express.Multer.File[]);
+    tryCatch(async () => {        
+        const validatedData = propertySchema.parse(req.body);        
+        const images = await uploadImages(req.files as unknown as Express.Multer.File[]);
         const user = req.user;
         
         if (!user)
-            return res.status(401).json({ success: false, message: 'Unauthorized' });
+            res.status(401).json({ success: false, message: 'Unauthorized' });
 
+        if (!images || images.length === 0)
+            return res.status(400).json({ success: false, message: 'Failed to handle images uploaded' });
+    
         const property = await createProperty(user.id, {
             title: validatedData.title,
             description: validatedData.description,
@@ -63,7 +69,13 @@ export const storeProperty = async (req: CustomRequest, res: Response) => {
             images: images
         });
 
-        return res.status(201).json({ success: true, property });
+        res.status(201).json({ success: true, property });
+    }, (error) => {
+        if (error instanceof ZodError) {
+            return res.status(400).json({ success: false, message: 'Validation error', errors: error.errors });
+        }
+
+        return res.status(500).json({ message: error.message });
     });
 }
 
@@ -77,13 +89,20 @@ export const updateProperty = async (req: CustomRequest, res: Response) => {
     return tryCatch(async () => {
         const { id } = req.params;
         const validatedData = propertySchema.parse(req.body);
-        const images = await uploadImages(validatedData.images as unknown as Express.Multer.File[]);
+        const images = await uploadImages(req.files as unknown as Express.Multer.File[]);
+    
+        if (!images) return res.status(404).json({ success: false, message: 'No images found' });
+
         const property = await updatePropertyModel(id, { ...validatedData, images });
 
         if (!property)
             return res.status(404).json({ success: false, message: 'Property not found' });
 
         return res.status(200).json({ success: true, property });
+    }, (error) => {
+        if (error instanceof ZodError) {
+            return res.status(400).json({ success: false, message: 'Validation error', errors: error.errors });
+        }
     });
 }
 
