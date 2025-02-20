@@ -16,14 +16,13 @@ const JWT_SECRET = process.env.JWT_SECRET as string;
  * @param token
  * @returns
  */
-export const handleGoogleAuthService = async (token: string) => {
+export const handleGoogleAuthService = async (token: string, role: Role) => {
   const googleUser = await getUserInfo(token);
   const { name, email, picture } = googleUser;
-
   let user = await getUserByEmail(email);
 
   if (!user)
-    user = await createUser({ name, avatar: picture, email, role: Role.RENTER });
+    user = await createUser({ name, avatar: picture, email, role: role });
 
   return user;
 }

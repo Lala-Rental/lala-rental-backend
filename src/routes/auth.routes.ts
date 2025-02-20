@@ -1,7 +1,22 @@
 import express from "express";
 import * as AuthController from "../controllers/auth.controller";
+import { authMiddleware } from "../middleware/auth.middleware";
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * /auth/user:
+ *   post:
+ *     summary: Get authenticated user
+ *     description: Authenticate user using auth key.
+ *     responses:
+ *       200:
+ *         description: Successfully authenticated
+ *       500:
+ *         description: Server error
+ */
+router.get('/user', authMiddleware, AuthController.authProfile)
 
 /**
  * @swagger
