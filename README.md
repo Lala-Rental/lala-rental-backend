@@ -61,7 +61,7 @@
 ## 📚 API Documentation  
 
 📖 Interactive API docs available at:  
-🔗 **[http://localhost:5000/api-docs](http://localhost:5000/api-docs)**  
+🔗 **[Swagger Documentation](https://lala-rental-server.onrender.com/api-docs)**  
 📖 Postman API docs also avaliable at:
 🔗 **[Postman Documentation](https://documenter.getpostman.com/view/31356498/2sAYdbPsyk)**  
 
