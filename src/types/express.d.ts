@@ -6,3 +6,9 @@ declare module 'express-serve-static-core' {
     user?: IUser;
   }
 }
+
+declare module "express" {
+  export interface Request {
+    user?: IUser;
+  }
+}
