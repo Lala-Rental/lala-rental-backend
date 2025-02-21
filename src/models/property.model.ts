@@ -31,9 +31,16 @@ export const getPropertyById = async (id: string, hostId?: string): Promise<IPro
  * @description Get All properties
  * @returns {Promise<IProperty[]>} - List of properties
  */
-export const getAllProperties = async (hostId?: string): Promise<IProperty[]> => {
+export const getAllProperties = async (filters: any = {}): Promise<IProperty[]> => {
+  const { hostId, query, location, price } = filters;
+
   const properties = await prisma.property.findMany({
-    where: { hostId },
+    where: {
+      ...(hostId && { hostId }),
+      ...(query && { title: { contains: query, mode: 'insensitive' } }),
+      ...(location && { location: { contains: location, mode: 'insensitive' } }),
+      ...(price && { price: { lte: String(price) } }),
+    },
     include: { host: true },
   });
   return properties;

@@ -16,9 +16,17 @@ import { CustomRequest } from '../types/request.types';
  * @param res - The HTTP response object used to send the response.
  * @returns A JSON response with a status code of 200 and the list of properties.
  */
-export const listProperties = async (_req: Request, res: Response) => {
+export const listProperties = async (req: Request, res: Response) => {
     return tryCatch(async () => {
-        const properties = await getAllProperties();
+        const { query, location, price } = req.query;
+        const filters: any = {};
+
+        if (query) filters.query = query;
+        if (location) filters.location = location;
+        if (price) filters.price = price;
+
+        const properties = await getAllProperties(filters);
+
         return res.status(200).json({
             message: "Properties fetched successfully",
             data: properties
@@ -39,7 +47,9 @@ export const listProperties = async (_req: Request, res: Response) => {
  */
 export const listUserProperties = async (req: CustomRequest, res: Response) => {
     return tryCatch(async () => {
-        const properties = await getAllProperties(req.user.id);
+        const properties = await getAllProperties({
+            hostId: req.user.id
+        });
 
         return res.status(200).json({
             message: "Properties fetched successfully",

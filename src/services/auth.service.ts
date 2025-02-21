@@ -38,5 +38,5 @@ export const handleGoogleAuthService = async (token: string, role: Role) => {
  */
 export const generateToken = async (user: IUser) => {
   const options: SignOptions = { expiresIn: "1h" };
-  return jwt.sign({ id: user.id, email: user.email, role: user.role }, JWT_SECRET, options);
+  return jwt.sign({ id: user.id, email: user.email, role: user.role, name: user.name, avatar: user.avatar }, JWT_SECRET, options);
 };
