@@ -32,6 +32,7 @@ export const getBookingById = async (
       id,
       ...(renterId && { renterId }),
     },
+    include: { property: true, renter: true },
   });
   return booking;
 };
@@ -41,7 +42,7 @@ export const getBookingById = async (
  * @returns {Promise<IBooking[]>} - List of bookings
  */
 export const getAllBookings = async (renterId?: string): Promise<IBooking[]> => {
-  const bookings = await prisma.booking.findMany({ where: { renterId } });
+  const bookings = await prisma.booking.findMany({ where: { renterId }, include: { property: true, renter: true }, });
   return bookings;
 };
 
@@ -53,6 +54,7 @@ export const getAllBookings = async (renterId?: string): Promise<IBooking[]> => 
 export const getAllBookingsByUser = async (userId: string): Promise<IBooking[]> => {
   const bookings = await prisma.booking.findMany({
     where: { renterId: userId },
+    include: { property: true, renter: true },
   });
 
   return bookings;
@@ -65,9 +67,8 @@ export const getAllBookingsByUser = async (userId: string): Promise<IBooking[]> 
  */
 export const allBookingsByPropertyId = async (propertyId: string): Promise<IBooking[]> => {
     const bookings = await prisma.booking.findMany({
-        where: {
-            propertyId: propertyId,
-        },
+      where: { propertyId: propertyId},
+      include: { property: true, renter: true },
     });
     return bookings;
 };

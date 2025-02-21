@@ -40,8 +40,37 @@ export const getPropertyById = async (
  * @returns {Promise<IProperty[]>} - List of properties
  */
 export const getAllProperties = async (hostId?: string): Promise<IProperty[]> => {
-  const properties = await prisma.property.findMany({ where: { hostId }, });
+  const properties = await prisma.property.findMany({
+    where: { hostId },
+    include: { host: true },
+  });
   return properties;
+};
+
+/**
+ * @description Get related properties
+ * @param {string} propertyId - Property ID
+ * @param {number} limit - Number of related properties to fetch
+ * @returns {Promise<IProperty[]>} - List of related properties
+ */
+export const getRelatedProperties = async (propertyId: string, limit: number = 5): Promise<IProperty[]> => {
+  const property = await prisma.property.findUnique({ where: { id: propertyId } });
+  
+  if (!property) throw new Error("Property not found");
+
+  const relatedProperties = await prisma.property.findMany({
+    where: {
+      id: { not: propertyId },
+      location: { contains: property.location.split(" ")[0] },
+      price: { lte: property.price + 500, gte: property.price },
+      description: { contains: property.description.split(" ")[0] },
+      title: { contains: property.title.split(" ")[0] },
+    },
+    take: limit,
+    include: { host: true },
+  });
+
+  return relatedProperties;
 };
 
 /**

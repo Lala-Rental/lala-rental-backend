@@ -107,7 +107,7 @@ export const storeBookings = async (req: CustomRequest, res: Response) => {
             status: 'PENDING'
         });
 
-        return res.status(201).json({ success: true, booking });
+        return res.status(201).json({ success: true, message: "Booking Successfully sent!", data: booking });
     }, (error) => {
         if (error instanceof ZodError) {
             return res.status(400).json({ success: false, message: 'Validation error', errors: error.errors });

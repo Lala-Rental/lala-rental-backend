@@ -20,6 +20,7 @@ const router = express.Router();
  *         description: Server error
  */
 router.get('/', PropertiesController.listProperties);
+router.get('/:id/related', PropertiesController.relatedProperties);
 
 /**
  * @swagger

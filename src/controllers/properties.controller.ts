@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { tryCatch } from '../utils/trycatch.util';
-import { createProperty, getAllProperties, getPropertyById, updateProperty as updatePropertyModel, deleteProperty as deletePropertyModel } from '../models/property.model';
+import { createProperty, getAllProperties, getPropertyById, updateProperty as updatePropertyModel, deleteProperty as deletePropertyModel, getRelatedProperties } from '../models/property.model';
 import { propertySchema } from '../validations/property.validation';
 import { uploadImages } from '../services/properties.service';
 import { ZodError } from 'zod';
@@ -17,6 +17,24 @@ export const listProperties = async (_req: Request, res: Response) => {
         const properties = await getAllProperties();
         return res.status(200).json({
             message: "Properties fetched successfully",
+            data: properties
+        });
+    });
+}
+
+/**
+ * List all related properties
+ * 
+ * @param req Request
+ * @param res Response
+ */
+export const relatedProperties = async (req: Request, res: Response) => {
+    return tryCatch(async () => {
+        const { id } = req.params; 
+        const properties = await getRelatedProperties(id);
+        
+        return res.status(200).json({
+            message: "Related Properties fetched successfully",
             data: properties
         });
     });
