@@ -7,10 +7,14 @@ import { ZodError } from 'zod';
 import { CustomRequest } from '../types/request.types';
 
 /**
- * List all properties
+ * Controller function to list all properties.
  * 
- * @param req Request
- * @param res Response
+ * This function handles the HTTP request to fetch all properties from the database.
+ * It uses the `tryCatch` utility to handle any potential errors during the process.
+ * 
+ * @param _req - The HTTP request object (not used in this function).
+ * @param res - The HTTP response object used to send the response.
+ * @returns A JSON response with a status code of 200 and the list of properties.
  */
 export const listProperties = async (_req: Request, res: Response) => {
     return tryCatch(async () => {
@@ -23,10 +27,36 @@ export const listProperties = async (_req: Request, res: Response) => {
 }
 
 /**
- * List all related properties
+ * List all properties associated with the authenticated user.
+ *
+ * This function handles the request to fetch all properties for the user
+ * identified by the `id` in the `req.user` object. It uses the `tryCatch`
+ * utility to handle any potential errors during the asynchronous operation.
+ *
+ * @param {CustomRequest} req - The request object, which includes the authenticated user's information.
+ * @param {Response} res - The response object used to send back the HTTP response.
+ * @returns {Promise<void>} A promise that resolves to sending a JSON response with the properties data.
+ */
+export const listUserProperties = async (req: CustomRequest, res: Response) => {
+    return tryCatch(async () => {
+        const properties = await getAllProperties(req.user.id);
+
+        return res.status(200).json({
+            message: "Properties fetched successfully",
+            data: properties
+        });
+    });
+}
+
+/**
+ * Controller function to fetch related properties based on the provided property ID.
  * 
- * @param req Request
- * @param res Response
+ * This function uses the `tryCatch` utility to handle errors and sends a JSON response
+ * with the related properties if successful.
+ * 
+ * @param req - The request object, containing the property ID in the parameters.
+ * @param res - The response object, used to send the JSON response.
+ * @returns A promise that resolves to a JSON response with the related properties.
  */
 export const relatedProperties = async (req: Request, res: Response) => {
     return tryCatch(async () => {
@@ -41,10 +71,13 @@ export const relatedProperties = async (req: Request, res: Response) => {
 }
 
 /**
- * Show Single Property
+ * Handles the request to show a property by its ID.
  * 
- * @param req Request
- * @param res Response
+ * This function retrieves a property based on the ID provided in the request parameters.
+ * 
+ * @param req - The request object containing the property ID in the parameters.
+ * @param res - The response object used to send the response.
+ * @returns A promise that resolves to the result of the tryCatch function.
  */
 export const showProperty = async (req: Request, res: Response) => {
     return tryCatch(async () => {
@@ -59,10 +92,15 @@ export const showProperty = async (req: Request, res: Response) => {
 }
 
 /**
- * Store Property
+ * Controller function to store a new property.
  * 
- * @param req Request
- * @param res Response
+ * This function handles the request to create a new property. It validates the request data,
+ * uploads images, and saves the property to the database. It uses the `tryCatch` utility to
+ * handle any potential errors during the process.
+ * 
+ * @param req - The request object containing the property data and user information.
+ * @param res - The response object used to send the response.
+ * @returns A promise that resolves to sending a JSON response with the created property data.
  */
 export const storeProperty = async (req: CustomRequest, res: Response) => {
     tryCatch(async () => {        
@@ -95,10 +133,13 @@ export const storeProperty = async (req: CustomRequest, res: Response) => {
 }
 
 /**
- * Update Property
- * 
- * @param req Request
- * @param res Response
+ * Updates a property with the given data and images.
+ *
+ * @param {CustomRequest} req - The request object containing property data and images.
+ * @param {Response} res - The response object to send the result.
+ * @returns {Promise<Response>} The response object with the update result.
+ *
+ * @throws {ZodError} If the validation of the request body fails.
  */
 export const updateProperty = async (req: CustomRequest, res: Response) => {
     return tryCatch(async () => {
@@ -122,10 +163,15 @@ export const updateProperty = async (req: CustomRequest, res: Response) => {
 }
 
 /**
- * Dlete Given Property
- * 
- * @param req Request
- * @param res Response
+ * Deletes a property based on the provided property ID and user information.
+ *
+ * @param {CustomRequest} req - The request object containing the property ID in the params and user information.
+ * @param {Response} res - The response object used to send the HTTP response.
+ * @returns {Promise<Response>} - A promise that resolves to the HTTP response indicating the result of the delete operation.
+ *
+ * @throws {401} - If the user is not authenticated.
+ * @throws {404} - If the property is not found.
+ * @throws {500} - If there is an internal server error.
  */
 export const deleteProperty = async (req: CustomRequest, res: Response) => {
     return tryCatch(async () => {

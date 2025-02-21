@@ -9,18 +9,21 @@ dotenv.config();
 const secret = process.env.JWT_SECRET ?? ("" as string);
 
 /**
- * Middleware to check if the user is authenticated
- *
- * @param req
- * @param res
- * @param next
- * @returns
+ * Middleware to authenticate requests using JWT tokens.
+ * 
+ * This middleware checks for the presence of a JWT token in the `Authorization` header of the request.
+ * If the token is not present, it responds with a 401 status code and an error message.
+ * 
+ * If the token is present, it verifies the token using the secret key. If the token is expired or invalid,
+ * it responds with appropriate error messages and status codes.
+ * 
+ * If the token is valid, it attaches the decoded user information to the request object and calls the `next` middleware.
+ * 
+ * @param req - The request object.
+ * @param res - The response object.
+ * @param next - The next middleware function.
  */
-export const authMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {

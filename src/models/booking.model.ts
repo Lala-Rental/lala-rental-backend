@@ -4,14 +4,13 @@ import { IBooking } from "../types/booking.types";
 const prisma = new PrismaClient();
 
 /**
- * @description Create a new booking
- * @param {Omit<IBooking, "id" | "createdAt" | "updatedAt">} bookingData - Booking data
- * @returns {Promise<IBooking>} - Created booking
+ * Creates a new booking in the database.
+ *
+ * @param renterId - The ID of the renter creating the booking.
+ * @param bookingData - The data for the booking, excluding the fields "id", "createdAt", "updatedAt", and "renterId".
+ * @returns A promise that resolves to the created booking.
  */
-export const createBooking = async (
-  renterId: string,
-  bookingData: Omit<IBooking, "id" | "createdAt" | "updatedAt" | "renterId">,
-): Promise<IBooking> => {
+export const createBooking = async ( renterId: string, bookingData: Omit<IBooking, "id" | "createdAt" | "updatedAt" | "renterId">,): Promise<IBooking> => {
   const booking = await prisma.booking.create({
     data: { renterId, ...bookingData },
   });
@@ -20,26 +19,26 @@ export const createBooking = async (
 };
 
 /**
- * @description Get Booking by ID
- * @param {string} id - Booking ID
+ * Retrieves a booking by its ID, optionally filtering by renter ID.
+ *
+ * @param id - The unique identifier of the booking.
+ * @param renterId - (Optional) The unique identifier of the renter.
+ * @returns A promise that resolves to the booking object if found, otherwise null.
  */
-export const getBookingById = async (
-  id: string,
-  renterId?: string
-): Promise<IBooking | null> => {
+export const getBookingById = async (id: string, renterId?: string): Promise<IBooking | null> => {
   const booking = await prisma.booking.findUnique({
-    where: {
-      id,
-      ...(renterId && { renterId }),
-    },
+    where: { id, ...(renterId && { renterId }) },
     include: { property: true, renter: true },
   });
+  
   return booking;
 };
 
 /**
- * @description Get All bookings
- * @returns {Promise<IBooking[]>} - List of bookings
+ * Retrieves all bookings from the database, optionally filtered by renter ID.
+ *
+ * @param {string} [renterId] - The ID of the renter to filter bookings by. If not provided, all bookings will be retrieved.
+ * @returns {Promise<IBooking[]>} - A promise that resolves to an array of booking objects.
  */
 export const getAllBookings = async (renterId?: string): Promise<IBooking[]> => {
   const bookings = await prisma.booking.findMany({ where: { renterId }, include: { property: true, renter: true }, });
@@ -47,9 +46,10 @@ export const getAllBookings = async (renterId?: string): Promise<IBooking[]> => 
 };
 
 /**
- * @description Get all bookings for a specific user
- * @param {string} userId - User ID
- * @returns {Promise<IBooking[]>} - List of bookings
+ * Retrieves all bookings associated with a specific user.
+ *
+ * @param userId - The unique identifier of the user whose bookings are to be retrieved.
+ * @returns A promise that resolves to an array of bookings associated with the specified user.
  */
 export const getAllBookingsByUser = async (userId: string): Promise<IBooking[]> => {
   const bookings = await prisma.booking.findMany({
@@ -61,46 +61,47 @@ export const getAllBookingsByUser = async (userId: string): Promise<IBooking[]> 
 };
 
 /**
- * @description Get bookings by property ID
- * @param {string} propertyId - Property ID
- * @returns {Promise<IBooking[]>} - List of bookings
+ * Retrieves all bookings associated with a specific property ID.
+ *
+ * @param {string} propertyId - The ID of the property for which to retrieve bookings.
+ * @returns {Promise<IBooking[]>} A promise that resolves to an array of bookings.
  */
 export const allBookingsByPropertyId = async (propertyId: string): Promise<IBooking[]> => {
-    const bookings = await prisma.booking.findMany({
-      where: { propertyId: propertyId},
-      include: { property: true, renter: true },
-    });
-    return bookings;
+  const bookings = await prisma.booking.findMany({
+    where: { propertyId: propertyId},
+    include: { property: true, renter: true },
+  });
+
+  return bookings;
 };
 
 /**
- * @description Update booking
- * @param {string} id - Booking ID
- * @param {Partial<IBooking>} bookingData - Booking data
- * @returns {Promise<IBooking>} - Updated booking
+ * Updates an existing booking with the provided data.
+ *
+ * @param id - The unique identifier of the booking to update.
+ * @param bookingData - An object containing the partial booking data to update.
+ * @returns A promise that resolves to the updated booking object.
  */
-export const updateBooking = async (
-  id: string,
-  bookingData: Partial<IBooking>
-): Promise<IBooking> => {
+export const updateBooking = async (id: string, bookingData: Partial<IBooking>): Promise<IBooking> => {
   const booking = await prisma.booking.update({
     where: { id },
     data: bookingData,
   });
+
   return booking;
 };
 
 /**
- * @description Delete booking
- * @param {string} id - Booking ID
- * @returns {Promise<IBooking>} - Deleted booking
+ * Deletes a booking from the database.
+ *
+ * @param id - The unique identifier of the booking to be deleted.
+ * @param renterId - (Optional) The unique identifier of the renter associated with the booking.
+ * @returns A promise that resolves to the deleted booking object.
  */
-export const deleteBooking = async (
-  id: string,
-  renterId?: string
-): Promise<IBooking> => {
+export const deleteBooking = async ( id: string, renterId?: string): Promise<IBooking> => {
   const booking = await prisma.booking.delete({
     where: { id, ...(renterId && { renterId }) },
   });
+
   return booking;
 };

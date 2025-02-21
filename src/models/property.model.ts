@@ -8,10 +8,7 @@ const prisma = new PrismaClient();
  * @param {Omit<IProperty, "id" | "createdAt" | "updatedAt">} propertyData - Property data
  * @returns {Promise<IProperty>} - Created property
  */
-export const createProperty = async (
-  hostId: string,
-  propertyData: Omit<IProperty, "id" | "createdAt" | "updatedAt">
-): Promise<IProperty> => {
+export const createProperty = async (hostId: string, propertyData: Omit<IProperty, "id" | "createdAt" | "updatedAt">): Promise<IProperty> => {
   const property = await prisma.property.create({
     data: { ...propertyData, hostId: hostId },
   });
@@ -23,14 +20,9 @@ export const createProperty = async (
  * @description Get Property by ID
  * @param {string} id - Property ID
  */
-export const getPropertyById = async (
-  id: string,
-  hostId?: string
-): Promise<IProperty | null> => {
+export const getPropertyById = async (id: string, hostId?: string): Promise<IProperty | null> => {
   const property = await prisma.property.findUnique({
-    where: {
-      id, ...(hostId && { hostId }),
-    },
+    where: { id, ...(hostId && { hostId }) },
   });
   return property;
 };

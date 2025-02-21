@@ -10,6 +10,7 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+const APP_NAME = process.env.APP_URL;
 
 app.use(cors());
 app.use(express.json());
@@ -23,5 +24,5 @@ app.use("/", routes);
 setupSwagger(app);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on  ${APP_NAME}`);
 });

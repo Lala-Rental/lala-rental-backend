@@ -7,10 +7,14 @@ import { ZodError } from 'zod';
 import { CustomRequest } from '../types/request.types';
 
 /**
- * List all User Booking
- *      
- * @param req Request
- * @param res Response
+ * Lists all bookings for the authenticated user.
+ *
+ * @param {CustomRequest} req - The request object, containing user information.
+ * @param {Response} res - The response object used to send the response.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ *
+ * @throws {401} If the user is not authenticated.
+ * @throws {200} If the bookings are successfully retrieved.
  */
 export const listBookings = async (req: CustomRequest, res: Response) => {
     return tryCatch(async () => {
@@ -28,10 +32,15 @@ export const listBookings = async (req: CustomRequest, res: Response) => {
 }
 
 /**
- * List all bookings for a specific user
+ * List all bookings for a specific user.
  * 
- * @param req Request
- * @param res Response
+ * This function handles the request to fetch all bookings associated with the authenticated user.
+ * It uses the `tryCatch` utility to handle any potential errors during the process.
+ * 
+ * @param {CustomRequest} req - The request object, which includes the authenticated user's information.
+ * @param {Response} res - The response object used to send back the HTTP response.
+ * 
+ * @returns {Promise<void>} - A promise that resolves to sending a JSON response with the user's bookings.
  */
 export const listUserBookings = async (req: CustomRequest, res: Response) => {
     return tryCatch(async () => {
@@ -44,11 +53,13 @@ export const listUserBookings = async (req: CustomRequest, res: Response) => {
     });
 };
 
+
 /**
- * Get bookings by property ID
+ * Retrieves all bookings for a specific property by its ID.
  * 
- * @param req Request
- * @param res Response
+ * @param req - The request object containing the property ID in the route parameters.
+ * @param res - The response object used to send the JSON response.
+ * @returns A JSON response with a status of 200 and the list of bookings for the specified property.
  */
 export const getBookingsByPropertyId = async (req: Request, res: Response) => {
     return tryCatch(async () => {
@@ -63,10 +74,13 @@ export const getBookingsByPropertyId = async (req: Request, res: Response) => {
 };
 
 /**
- * Show Single Booking
+ * Handles the request to show a booking by its ID.
  * 
- * @param req Request
- * @param res Response
+ * This function retrieves a booking based on the provided ID in the request parameters.
+ * 
+ * @param req - The request object, containing the booking ID in the parameters and the user information.
+ * @param res - The response object used to send the HTTP response.
+ * @returns A promise that resolves to the HTTP response.
  */
 export const showBooking = async (req: CustomRequest, res: Response) => {
     return tryCatch(async () => {
@@ -86,10 +100,16 @@ export const showBooking = async (req: CustomRequest, res: Response) => {
 }
 
 /**
- * Store Booking
+ * Handles the storage of bookings.
  * 
- * @param req Request
- * @param res Response
+ * This function validates the request body against the booking schema,
+ * checks if the user is authenticated, and then processes the booking.
+ * If the booking is successful, it returns a 201 status with a success message
+ * and the booking data.
+ * 
+ * @param req - The custom request object containing the booking data and user information.
+ * @param res - The response object used to send the HTTP response.
+ * @returns A promise that resolves to the HTTP response.
  */
 export const storeBookings = async (req: CustomRequest, res: Response) => {
     return tryCatch(async () => {
@@ -118,10 +138,12 @@ export const storeBookings = async (req: CustomRequest, res: Response) => {
 }
 
 /**
- * Update Booking
+ * Updates a booking with the provided data.
  * 
- * @param req Request
- * @param res Response
+ * @param req - The request object containing the booking data and user information.
+ * @param res - The response object used to send the response.
+ * 
+ * @returns A promise that resolves to a response indicating the success or failure of the update operation.
  */
 export const updateBookings = async (req: CustomRequest, res: Response) => {
     return tryCatch(async () => {
@@ -151,10 +173,14 @@ export const updateBookings = async (req: CustomRequest, res: Response) => {
 }
 
 /**
- * Delete Booking
+ * Deletes a booking based on the provided booking ID and user information.
  * 
- * @param req Request
- * @param res Response
+ * @param {CustomRequest} req - The request object containing the booking ID in the params and user information.
+ * @param {Response} res - The response object used to send back the appropriate HTTP response.
+ * 
+ * @returns {Promise<Response>} - A promise that resolves to the HTTP response indicating the result of the delete operation.
+ * 
+ * @throws {Error} - Throws an error if the booking deletion process fails.
  */
 export const deleteBooking = async (req: CustomRequest, res: Response) => {
     return tryCatch(async () => {

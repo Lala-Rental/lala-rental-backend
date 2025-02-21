@@ -8,11 +8,15 @@ import { Role } from "@prisma/client";
 dotenv.config();
 
 /**
- * Handle Google OAuth
- *
- * @param req
- * @param res 
- * @returns 
+ * Handles Google authentication for users.
+ * 
+ * This function processes the Google authentication token and assigns a role to the user.
+ * It validates the role, authenticates the user, and generates an access token.
+ * 
+ * @param {Request} req - The request object containing the authentication token and user role.
+ * @param {Response} res - The response object used to send the authentication status and data.
+ * @returns {Promise<void>} - A promise that resolves to void.
+ * @throws {Error} - Throws an error if the role is invalid or if authentication fails.
  */
 export const handleGoogleAuth = async (req: Request, res: Response) => {
   tryCatch(async () => {
@@ -45,11 +49,14 @@ export const handleGoogleAuth = async (req: Request, res: Response) => {
 }
 
 /**
- * User Profile
+ * Retrieves the authenticated user's profile.
  * 
- * @param req
- * @param res 
- * @returns 
+ * This function returns the profile information of the authenticated user.
+ * It assumes that the user information is available in the request object.
+ * 
+ * @param {CustomRequest} req - The request object containing the authenticated user's information.
+ * @param {Response} res - The response object used to send the profile data.
+ * @returns {Promise<void>} - A promise that resolves to void.
  */
 export const authProfile = (req: CustomRequest, res: Response) => {
   return tryCatch(async () => {
@@ -62,11 +69,14 @@ export const authProfile = (req: CustomRequest, res: Response) => {
 }
 
 /**
- * Logout user
+ * Logs out the authenticated user.
  * 
- * @param req
- * @param res 
- * @returns 
+ * This function destroys the user's session, effectively logging them out.
+ * It handles any errors that may occur during the session destruction process.
+ * 
+ * @param {Request} req - The request object containing the user's session.
+ * @param {Response} res - The response object used to send the logout status.
+ * @returns {Promise<void>} - A promise that resolves to void.
  */
 export const logoutUser = (req: Request, res: Response) => {
   return tryCatch(async () => {
