@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { tryCatch } from "../utils/trycatch.util";
 import dotenv from 'dotenv';
-import { generateToken, handleGoogleAuthService, invalidateToken } from "../services/auth.service";
+import { generateToken, handleGoogleAuthService } from "../services/auth.service";
 import { CustomRequest } from '../types/request.types';
 import { Role } from "@prisma/client";
 
@@ -80,18 +80,6 @@ export const authProfile = (req: CustomRequest, res: Response) => {
  */
 export const logoutUser = (req: Request, res: Response) => {
   return tryCatch(async () => {
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if (!token) {
-      return res.status(400).json({
-        status: "error",
-        message: "No token provided",
-      });
-    }
-
-    // Invalidate the token
-    await invalidateToken(token);
-
     req.session.destroy((err) => {
       if (err) {
         return res.status(500).json({

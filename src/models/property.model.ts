@@ -44,6 +44,7 @@ export const getAllProperties = async (filters: any = {}): Promise<IProperty[]> 
     orderBy: { createdAt: 'desc'},
     include: { host: true },
   });
+  
   return properties;
 };
 
