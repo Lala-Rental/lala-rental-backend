@@ -41,6 +41,7 @@ export const getAllProperties = async (filters: any = {}): Promise<IProperty[]> 
       ...(location && { location: { contains: location, mode: 'insensitive' } }),
       ...(price && { price: { lte: String(price) } }),
     },
+    orderBy: { createdAt: 'desc'},
     include: { host: true },
   });
   return properties;
@@ -65,6 +66,7 @@ export const getRelatedProperties = async (propertyId: string, limit: number = 5
       description: { contains: property.description.split(" ")[0] },
       title: { contains: property.title.split(" ")[0] },
     },
+    orderBy: { createdAt: 'desc'},
     take: limit,
     include: { host: true },
   });

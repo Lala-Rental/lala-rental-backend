@@ -41,7 +41,7 @@ export const getBookingById = async (id: string, renterId?: string): Promise<IBo
  * @returns {Promise<IBooking[]>} - A promise that resolves to an array of booking objects.
  */
 export const getAllBookings = async (renterId?: string): Promise<IBooking[]> => {
-  const bookings = await prisma.booking.findMany({ where: { renterId }, include: { property: true, renter: true }, });
+  const bookings = await prisma.booking.findMany({ where: { renterId }, orderBy: { createdAt: 'desc'}, include: { property: true, renter: true }, });
   return bookings;
 };
 
